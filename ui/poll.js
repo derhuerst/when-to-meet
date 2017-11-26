@@ -3,6 +3,8 @@
 const h = require('h2ml')
 const {DateTime} = require('luxon')
 const countBy = require('lodash/countBy')
+const ms = require('ms')
+const slugg = require('slugg')
 
 const {meta, stylesheet} = require('./lib')
 const renderPage = require('./page')
@@ -46,6 +48,37 @@ const renderChoice = (choice, locale) => {
 	])
 }
 
+const pollSubmitName = h('td', {}, [
+	h('input', {
+		type: 'text',
+		form: 'poll-submit',
+		name: 'name',
+		class: 'poll-submit-name',
+		required: 'required',
+		autocomplete: 'given-name',
+		inputmode: 'verbatim',
+		maxlength: '50',
+		minlength: '1',
+		placeholder: 'your name' // todo: use a <label>
+		// todo: tabindex
+	})
+])
+
+const renderCreated = (when, locale) => {
+	const dt = DateTime.fromMillis(when, {locale})
+
+	return h('abbr', {
+		title: dt.toLocaleString(DateTime.DATETIME_FULL)
+	}, [
+		h('time', {
+			datetime: dt.toISO()
+		}, [
+			ms(Date.now() - when, {long: true}),
+			' ago'
+		])
+	])
+}
+
 const renderSummary = (poll, choiceId) => {
 	let count = 0
 	for (let vote of poll.votes) {
@@ -67,21 +100,7 @@ const renderPoll = (poll, locale) => {
 		h('td', {}, [poll.votes.length + ' participants'])
 	]
 	const submit = [
-		h('td', {}, [
-			h('input', {
-				type: 'text',
-				form: 'poll-submit',
-				name: 'name',
-				class: 'poll-submit-name',
-				required: 'required',
-				autocomplete: 'given-name',
-				inputmode: 'verbatim',
-				maxlength: '50',
-				minlength: '1',
-				placeholder: 'your name' // todo: use a <label>
-				// todo: form, tabindex
-			})
-		])
+		pollSubmitName
 	]
 	for (let choiceId of Object.keys(poll.choices)) {
 		const choice = poll.choices[choiceId]
@@ -95,7 +114,7 @@ const renderPoll = (poll, locale) => {
 				form: 'poll-submit',
 				name: 'choice-' + choiceId,
 				class: 'poll-submit-choice',
-				// todo: form, tabindex
+				// todo: tabindex
 			})
 		]))
 	}
@@ -122,7 +141,15 @@ const renderPoll = (poll, locale) => {
 		votes.push(h('tr', {}, cells))
 	}
 
+	const url = '/p/' + encodeURIComponent(slugg(poll.title)) + '/' + poll.id
 	const content = [
+		h('h2', {id: 'poll-title'}, poll.title),
+		h('p', {id: 'poll-meta'}, [
+			'created ',
+			renderCreated(poll.created * 1000, locale),
+			' by ',
+			poll.author
+		]),
 		h('table', {
 			id: 'poll',
 			class: 'poll'

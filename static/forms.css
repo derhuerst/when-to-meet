@@ -38,7 +38,6 @@ input[type="submit"] {
 	padding: .4em;
 	line-height: 1;
 	color: white;
-	/*background-color: #2980b9;*/
 	background-color: #c0392b;
 	border: none;
 	border-radius: .2em;
@@ -51,6 +50,25 @@ input[type="submit"]:hover, input[type="submit"]:focus {
 }
 input[type="submit"]:active {
 	/*background-color: #1970a9;*/
+	background-color: #b0291b;
+}
+
+a.button {
+	display: inline-block;
+	margin: 1rem 0;
+	padding: .4em;
+	line-height: 1;
+	color: white;
+	background-color: #c0392b;
+	border-radius: .2em;
+	font-size: 97%;
+	cursor: pointer;
+}
+a.button:hover, a.button:focus {
+	text-decoration: none;
+	background-color: #d0493b;
+}
+a.button:active {
 	background-color: #b0291b;
 }
 
@@ -79,21 +97,12 @@ input[type="checkbox"]:checked::before {
 	content: '✔︎';
 }
 
-a.button {
-	display: inline-block;
-	margin: 1rem 0;
-	padding: .4em;
-	line-height: 1;
-	color: white;
-	background-color: #c0392b;
-	border-radius: .2em;
-	font-size: 97%;
-	cursor: pointer;
-}
-a.button:hover, a.button:focus {
-	text-decoration: none;
-	background-color: #d0493b;
-}
-a.button:active {
-	background-color: #b0291b;
+input[type="submit"]:disabled,
+input[type="submit"]:disabled:hover,
+input[type="submit"]:disabled:active,
+a.button.disabled,
+a.button.disabled:hover,
+a.button.disabled:active {
+	background-color: #888;
+	cursor: not-allowed;
 }
