@@ -1,0 +1,24 @@
+{
+	"private": true,
+	"name": "when-to-meet",
+	"description": "Find the best date & time to meet with many people.",
+	"version": "0.1.0",
+	"main": "index.js",
+	"keywords": [
+		"meet",
+		"date",
+		"time",
+		"choice",
+		"app"
+	],
+	"author": "Jannis R <mail@jannisr.de>",
+	"homepage": "https://github.com/derhuerst/when-to-meet",
+	"repository": "derhuerst/when-to-meet",
+	"bugs": "https://github.com/derhuerst/when-to-meet/issues",
+	"license": "ISC",
+	"engines": {
+		"node": ">=6"
+	},
+	"dependencies": {
+	}
+}
