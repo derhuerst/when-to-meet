@@ -2,17 +2,17 @@ form {
 	margin: 1rem 0;
 }
 
-form label {
+label {
 	display: block;
 	margin: 1rem 0;
 	font-size: 90%;
 }
-form label input {
+label input {
 	margin-top: .3rem;
 	font-size: 97%;
 }
 
-form input {
+input {
 	padding: .3em .5em;
 	display: block;
 	width: 100%;
@@ -25,12 +25,12 @@ form input {
 	-moz-appearance: none;
 	appearance: none;
 }
-form input:focus {
-	border-color: #49a0d9;
+input:focus {
+	border-color: #b0291b;
 	outline: none;
 }
 
-form input[type="submit"] {
+input[type="submit"] {
 	display: inline-block;
 	min-width: auto;
 	width: auto;
@@ -38,22 +38,46 @@ form input[type="submit"] {
 	padding: .4em;
 	line-height: 1;
 	color: white;
-	background-color: #2980b9;
+	/*background-color: #2980b9;*/
+	background-color: #c0392b;
 	border: none;
 	border-radius: .2em;
 	cursor: pointer;
 }
-form input[type="submit"]:hover, form input[type="submit"]:focus {
+input[type="submit"]:hover, input[type="submit"]:focus {
 	text-decoration: none;
-	background-color: #3990c9;
+	/*background-color: #3990c9;*/
+	background-color: #d0493b;
 }
-form input[type="submit"]:active {
-	background-color: #1970a9;
+input[type="submit"]:active {
+	/*background-color: #1970a9;*/
+	background-color: #b0291b;
 }
 
-
-
-
+input[type="checkbox"] {
+	position: relative;
+	width: 1.4em;
+	max-width: none;
+	height: 1.4em;
+	padding: 0;
+	cursor: pointer;
+	background-color: #fff;
+}
+input[type="checkbox"]:active, input[type="checkbox"]:focus {
+	border-color: #666;
+}
+input[type="checkbox"]::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: inherit;
+	text-align: center;
+	line-height: 1.4em;
+	text-indent: -.1em;
+}
+input[type="checkbox"]:checked::before {
+	content: '✔︎';
+}
 
 a.button {
 	display: inline-block;
@@ -61,15 +85,15 @@ a.button {
 	padding: .4em;
 	line-height: 1;
 	color: white;
-	background-color: #2980b9;
+	background-color: #c0392b;
 	border-radius: .2em;
 	font-size: 97%;
 	cursor: pointer;
 }
 a.button:hover, a.button:focus {
 	text-decoration: none;
-	background-color: #3990c9;
+	background-color: #d0493b;
 }
 a.button:active {
-	background-color: #1970a9;
+	background-color: #b0291b;
 }

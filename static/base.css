@@ -32,14 +32,18 @@ p {
 }
 
 a {
-	color: #2980b9;
+	color: #c0392b;
 	text-decoration: none;
 }
 a:hover, a:focus {
-	text-decoration: underline;
+	color: #d0493b;
+	text-decoration: none;
 }
 a:focus {
 	outline: none;
+}
+a:active {
+	color: #b0291b;
 }
 
 img {
