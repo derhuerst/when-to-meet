@@ -19,7 +19,7 @@ input {
 	max-width: 30em;
 	box-sizing: border-box;
 	font-size: 97%;
-	border: 1px solid #888;
+	border: 2px solid #888;
 	border-radius: .2em;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -74,9 +74,9 @@ a.button:active {
 
 input[type="checkbox"] {
 	position: relative;
-	width: 1.4em;
+	width: 1.8em;
 	max-width: none;
-	height: 1.4em;
+	height: 1.6em;
 	padding: 0;
 	cursor: pointer;
 	background-color: #fff;
@@ -90,10 +90,12 @@ input[type="checkbox"]::before {
 	left: 0;
 	width: inherit;
 	text-align: center;
-	line-height: 1.4em;
-	text-indent: -.1em;
+	line-height: 1.5em;
+	font-size: 90%;
+	text-indent: -.2em;
 }
 input[type="checkbox"]:checked::before {
+	/* todo: use an SVG icon */
 	content: '✔︎';
 }
 
@@ -105,4 +107,16 @@ a.button.disabled:hover,
 a.button.disabled:active {
 	background-color: #888;
 	cursor: not-allowed;
+}
+
+.three-states-checkbox {
+	display: inline-block;
+}
+.three-states-checkbox.third-state input[type="checkbox"] {
+	border-color: #e1b400;
+}
+.three-states-checkbox.third-state input[type="checkbox"]::before {
+	/* todo: use an SVG icon */
+	content: '(✔︎)︎';
+	color: #e1b400;
 }

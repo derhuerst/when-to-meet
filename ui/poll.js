@@ -6,7 +6,7 @@ const countBy = require('lodash/countBy')
 const ms = require('ms')
 const slugg = require('slugg')
 
-const {meta, stylesheet} = require('./lib')
+const {meta, stylesheet, script} = require('./lib')
 const renderPage = require('./page')
 const site = require('../lib/site')
 
@@ -79,6 +79,22 @@ const renderCreated = (when, locale) => {
 	])
 }
 
+const renderThreeStatesCheckbox = (props) => {
+	const inputProps = Object.assign({}, props)
+	inputProps.type = 'checkbox'
+	delete inputProps.form
+	delete inputProps.name
+
+	return h('div', {class: 'three-states-checkbox'}, [
+		h('input', {
+			type: 'hidden',
+			form: props.form,
+			name: props.name
+		}),
+		h('input', inputProps)
+	])
+}
+
 const renderSummary = (poll, choiceId) => {
 	let count = 0
 	for (let vote of poll.votes) {
@@ -109,11 +125,10 @@ const renderPoll = (poll, locale) => {
 		summary.push(h('td', {}, [renderSummary(poll, choiceId)]))
 		submit.push(h('td', {}, [
 			// todo: use a <label>
-			h('input', {
-				type: 'checkbox',
+			renderThreeStatesCheckbox({
 				form: 'poll-submit',
 				name: 'choice-' + choiceId,
-				class: 'poll-submit-choice',
+				class: 'poll-submit-choice'
 				// todo: tabindex
 			})
 		]))
@@ -173,7 +188,8 @@ const renderPoll = (poll, locale) => {
 	const page = Object.assign({}, poll, {
 		head: [
 			meta('author', poll.author),
-			stylesheet('/static/poll.css')
+			stylesheet('/static/poll.css'),
+			script('/static/poll.bundle.js')
 		]
 	})
 	return renderPage(site, page, content)

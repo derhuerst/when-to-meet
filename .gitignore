@@ -10,3 +10,5 @@ package-lock.json
 shrinkwrap.yaml
 
 when-to-meet.ldb
+
+static/poll.bundle.js
