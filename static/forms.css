@@ -1,0 +1,75 @@
+form {
+	margin: 1rem 0;
+}
+
+form label {
+	display: block;
+	margin: 1rem 0;
+	font-size: 90%;
+}
+form label input {
+	margin-top: .3rem;
+	font-size: 97%;
+}
+
+form input {
+	padding: .3em .5em;
+	display: block;
+	width: 100%;
+	max-width: 30em;
+	box-sizing: border-box;
+	font-size: 97%;
+	border: 1px solid #888;
+	border-radius: .2em;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+form input:focus {
+	border-color: #49a0d9;
+	outline: none;
+}
+
+form input[type="submit"] {
+	display: inline-block;
+	min-width: auto;
+	width: auto;
+	margin: 0;
+	padding: .4em;
+	line-height: 1;
+	color: white;
+	background-color: #2980b9;
+	border: none;
+	border-radius: .2em;
+	cursor: pointer;
+}
+form input[type="submit"]:hover, form input[type="submit"]:focus {
+	text-decoration: none;
+	background-color: #3990c9;
+}
+form input[type="submit"]:active {
+	background-color: #1970a9;
+}
+
+
+
+
+
+a.button {
+	display: inline-block;
+	margin: 1rem 0;
+	padding: .4em;
+	line-height: 1;
+	color: white;
+	background-color: #2980b9;
+	border-radius: .2em;
+	font-size: 97%;
+	cursor: pointer;
+}
+a.button:hover, a.button:focus {
+	text-decoration: none;
+	background-color: #3990c9;
+}
+a.button:active {
+	background-color: #1970a9;
+}
