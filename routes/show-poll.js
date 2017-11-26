@@ -10,11 +10,13 @@ const showPoll = (req, res, next) => {
 	if (!req.app || !req.app.locals || !req.app.locals.db) return next()
 	if (accepts(req).type('html') !== 'html') return next()
 
+	const locale = req.locales[0] || null
+
 	getPoll(req.app.locals.db, req.params.id, (err, poll) => {
 		if (err) return next(err)
 
 		try {
-			const html = renderPoll(poll)
+			const html = renderPoll(poll, locale)
 			res.status(200)
 			res.type('html')
 			res.end(html)

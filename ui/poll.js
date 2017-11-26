@@ -1,20 +1,155 @@
 'use strict'
 
 const h = require('h2ml')
+const {DateTime} = require('luxon')
+const countBy = require('lodash/countBy')
 
 const {meta, stylesheet} = require('./lib')
 const renderPage = require('./page')
 const site = require('../lib/site')
 
-const renderPoll = (poll) => {
-	const head = [
-		meta('author', poll.author),
-		stylesheet('/static/poll.css')
+const hasProp = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
+
+const renderChoice = (choice, locale) => {
+	// todo: pull timezone from poll
+	const start = DateTime.fromISO(choice.date, {locale})
+		.plus({seconds: choice.timeFrom})
+	const end = DateTime.fromISO(choice.date)
+		.plus({seconds: choice.timeTo})
+
+	const month = start.toFormat('LLL')
+	const day = start.toFormat('c')
+	const dayOfWeek = start.toFormat('ccc')
+	const startISO = start.toISO()
+	const startTime = start.toLocaleString(DateTime.TIME_SIMPLE)
+	const endISO = end.toISO()
+	const endTime = end.toLocaleString(DateTime.TIME_SIMPLE)
+
+	// todo: properly render day overflows
+	return h('div', {
+		class: 'poll-choice'
+	}, [
+		h('div', {class: 'poll-choice-month'}, month),
+		h('div', {class: 'poll-choice-day'}, day),
+		h('div', {class: 'poll-choice-day-of-week'}, dayOfWeek),
+		h('div', {class: 'poll-choice-time'}, [
+			h('time', {
+				class: 'poll-choice-start-time',
+				datetime: startISO
+			}, startTime),
+			' – ',
+			h('time', {
+				class: 'poll-choice-end-time',
+				datetime: endISO
+			}, endTime)
+		])
+	])
+}
+
+const renderSummary = (poll, choiceId) => {
+	let count = 0
+	for (let vote of poll.votes) {
+		for (let chosen of vote.choices) {
+			if (chosen.choiceId === choiceId && chosen.available) count++
+		}
+	}
+
+	return h('abbr', {
+		title: count + ' people are available'
+	}, ['✔︎ ' + count])
+}
+
+const renderPoll = (poll, locale) => {
+	const choices = [
+		h('td') // empty top left field
 	]
+	const summary = [
+		h('td', {}, [poll.votes.length + ' participants'])
+	]
+	const submit = [
+		h('td', {}, [
+			h('input', {
+				type: 'text',
+				form: 'poll-submit',
+				name: 'name',
+				class: 'poll-submit-name',
+				required: 'required',
+				autocomplete: 'given-name',
+				inputmode: 'verbatim',
+				maxlength: '50',
+				minlength: '1',
+				placeholder: 'your name' // todo: use a <label>
+				// todo: form, tabindex
+			})
+		])
+	]
+	for (let choiceId of Object.keys(poll.choices)) {
+		const choice = poll.choices[choiceId]
 
-	const content = poll.title // todo
+		choices.push(h('td', {}, [renderChoice(choice, locale)]))
+		summary.push(h('td', {}, [renderSummary(poll, choiceId)]))
+		submit.push(h('td', {}, [
+			// todo: use a <label>
+			h('input', {
+				type: 'checkbox',
+				form: 'poll-submit',
+				name: 'choice-' + choiceId,
+				class: 'poll-submit-choice',
+				// todo: form, tabindex
+			})
+		]))
+	}
 
-	return renderPage(site, poll, content)
+	const votes = []
+	for (let vote of poll.votes) {
+		const cells = [
+			h('td', {}, vote.author)
+		]
+
+		for (let choiceId of Object.keys(poll.choices)) {
+			const chosen = vote.choices.find(c => c.choiceId === choiceId)
+			let text = '?'
+			let cls = 'poll-unknown'
+			if (chosen) {
+				text = chosen.available ? '✔︎' : '✘'
+				cls = chosen.available ? 'poll-available' : 'poll-unavailable'
+			}
+
+			// todo: alt text or <abbr>
+			cells.push(h('td', {class: cls}, [text]))
+		}
+
+		votes.push(h('tr', {}, cells))
+	}
+
+	const content = [
+		h('table', {
+			id: 'poll',
+			class: 'poll'
+		}, [
+			h('tr', {class: 'poll-choices'}, choices),
+			h('tr', {class: 'poll-summary'}, summary),
+			h('tr', {class: 'poll-submit'}, submit)
+		].concat(votes)),
+		h('form', {
+			id: 'poll-submit',
+			action: '/polls/' + poll.id,
+			method: 'post'
+		}, [
+			h('input', {
+				type: 'submit',
+				value: 'submit'
+			})
+		])
+	].join('\n')
+
+	const page = Object.assign({}, poll, {
+		head: [
+			meta('author', poll.author),
+			stylesheet('/static/poll.css')
+		]
+	})
+	return renderPage(site, page, content)
 }
 
 module.exports = renderPoll
