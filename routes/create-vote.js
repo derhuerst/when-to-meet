@@ -1,6 +1,7 @@
 'use strict'
 
 const randomId = require('crypto-random-string')
+const escapeHtml = require('escape-html')
 const difference = require('lodash/difference')
 
 const getPoll = require('../lib/get-poll')
@@ -31,7 +32,7 @@ const createVote = (req, res, next) => {
 			choices: []
 		}
 		for (let k of Object.keys(req.body)) {
-			if (k === 'author') val.author = req.body.author
+			if (k === 'author') val.author = escapeHtml(req.body.author)
 			else if (k === 'vote-key') continue
 			else {
 				const choiceId = k.slice('choice-'.length)

@@ -2,7 +2,6 @@
 
 const h = require('h2ml')
 const {DateTime} = require('luxon')
-const countBy = require('lodash/countBy')
 const ms = require('ms')
 
 const {meta, stylesheet, script} = require('./lib')
@@ -10,8 +9,6 @@ const renderChoiceSummary = require('./choice-summary')
 const renderPage = require('./page')
 const site = require('../lib/site')
 const pollUrl = require('../lib/poll-url')
-
-const hasProp = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
 
 const renderChoice = (choice, locale) => {
 	// todo: pull timezone from poll
@@ -179,6 +176,7 @@ const renderPoll = (poll) => {
 			id: 'poll',
 			class: 'poll'
 		}, [
+			// todo: use thead & tbody
 			h('tr', {class: 'poll-choices'}, choices),
 			h('tr', {class: 'poll-summary'}, summary),
 			pollSubmitRow

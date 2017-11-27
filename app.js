@@ -37,6 +37,7 @@ app.get('/p/:title/:id/edit', editPoll)
 app.post('/p/:title/:id', bodyParser, createVote)
 
 app.use((err, req, res, next) => {
+	console.error(err)
 	res.status(err.notFound ? 404 : err.statusCode || 500)
 	res.type('html')
 	res.end(renderError(err))

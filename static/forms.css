@@ -86,6 +86,7 @@ input[type="checkbox"]:active, input[type="checkbox"]:focus {
 	border-color: #666;
 }
 input[type="checkbox"]::before {
+	content: '✘';
 	position: absolute;
 	top: 0;
 	left: 0;
