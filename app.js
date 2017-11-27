@@ -7,8 +7,10 @@ const hsts = require('hsts')
 const compression = require('compression')
 const serve = require('serve-static')
 const preferredLocales = require('negotiator/lib/language')
+const bodyParsers = require('body-parser')
 
 const showPoll = require('./routes/show-poll')
+const createVote = require('./routes/create-vote')
 
 const db = level(process.env.DB || './when-to-meet.ldb', {valueEncoding: 'json'})
 const app = express()
@@ -23,6 +25,7 @@ app.use((req, res, next) => {
 	next()
 })
 
-app.get('/polls/:id', showPoll)
+app.get('/p/:title/:id', showPoll)
+app.post('/p/:title/:id', bodyParsers.urlencoded({extended: false}), createVote)
 
 module.exports = app

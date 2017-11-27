@@ -48,12 +48,12 @@ const renderChoice = (choice, locale) => {
 	])
 }
 
-const pollSubmitName = h('td', {}, [
+const pollSubmitAuthor = h('td', {}, [
 	h('input', {
 		type: 'text',
 		form: 'poll-submit',
-		name: 'name',
-		class: 'poll-submit-name',
+		name: 'author',
+		class: 'poll-submit-author',
 		required: 'required',
 		autocomplete: 'given-name',
 		inputmode: 'verbatim',
@@ -119,7 +119,7 @@ const renderPoll = (poll, locale) => {
 		h('td', {}, [poll.votes.length + ' participants'])
 	]
 	const submit = [
-		pollSubmitName
+		pollSubmitAuthor
 	]
 	for (let choiceId of Object.keys(poll.choices)) {
 		const choice = poll.choices[choiceId]
@@ -163,6 +163,7 @@ const renderPoll = (poll, locale) => {
 		votes.push(h('tr', {}, cells))
 	}
 
+	// todo: add a poll.slug prop
 	const url = '/p/' + encodeURIComponent(slugg(poll.title)) + '/' + poll.id
 	const content = [
 		h('h2', {id: 'poll-title'}, poll.title),
@@ -182,7 +183,7 @@ const renderPoll = (poll, locale) => {
 		].concat(votes)),
 		h('form', {
 			id: 'poll-submit',
-			action: '/polls/' + poll.id,
+			action: url,
 			method: 'post'
 		}, [
 			h('input', {
