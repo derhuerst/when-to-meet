@@ -9,6 +9,7 @@ const serve = require('serve-static')
 const preferredLocales = require('negotiator/lib/language')
 const bodyParsers = require('body-parser')
 
+const start = require('./routes/start')
 const showPoll = require('./routes/show-poll')
 const createVote = require('./routes/create-vote')
 const renderError = require('./ui/error')
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 	next()
 })
 
+app.get('/', start)
 app.get('/p/:title/:id', showPoll)
 app.post('/p/:title/:id', bodyParsers.urlencoded({extended: false}), createVote)
 

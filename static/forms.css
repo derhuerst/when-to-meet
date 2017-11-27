@@ -6,6 +6,7 @@ label {
 	display: block;
 	margin: 1rem 0;
 	font-size: 90%;
+	text-align: left;
 }
 label input {
 	margin-top: .3rem;
