@@ -112,10 +112,10 @@ a.button.disabled:active {
 .three-states-checkbox {
 	display: inline-block;
 }
-.three-states-checkbox.third-state input[type="checkbox"] {
+.three-states-checkbox.maybe input[type="checkbox"] {
 	border-color: #e1b400;
 }
-.three-states-checkbox.third-state input[type="checkbox"]::before {
+.three-states-checkbox.maybe input[type="checkbox"]::before {
 	/* todo: use an SVG icon */
 	content: '(✔︎)︎';
 	color: #e1b400;

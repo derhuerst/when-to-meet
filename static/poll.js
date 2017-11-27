@@ -2,42 +2,45 @@
 
 const docReady = require('document-ready')
 
-const on = 'checked'
+const on = 'yes'
 const maybe = 'maybe'
-const off = 'unchecked'
+const off = 'no'
+const validValues = [on, maybe, off]
 
-const cls = 'third-state'
-const attr = 'data-third-state'
+const cls = 'maybe'
 const selector = '.three-states-checkbox'
 
 // the third state will occur after :checked
 const makeThreeStateCheckbox = (wrapper) => {
 	const hidden = wrapper.querySelector('input[type="hidden"]')
 	if (!hidden) throw new Error(`invalid ${selector} wrapper`)
-	if (hidden.hasAttribute(attr)) return; // already converted
+	if (validValues.includes(hidden.value)) return; // already converted
 
 	const visible = wrapper.querySelector('input[type="checkbox"]')
 	if (!visible) throw new Error(`invalid ${selector} wrapper`)
 
-	visible.addEventListener('change', () => {
-		const oldState = hidden.getAttribute(attr)
+	const applyToHidden = () => {
+		const oldState = hidden.value
 
 		if (oldState === on) {
-			hidden.setAttribute(attr, maybe)
+			hidden.value = maybe
 			wrapper.classList.add(cls)
 			visible.checked = true
 		} else if (oldState === maybe) {
-			hidden.setAttribute(attr, off)
+			hidden.value = off
 			wrapper.classList.remove(cls)
 			visible.checked = false
 		} else if (oldState === off) {
-			hidden.setAttribute(attr, on)
+			hidden.value = on
 			wrapper.classList.remove(cls)
 			visible.checked = true
 		} else {
-			hidden.setAttribute(attr, visible.checked ? on : off)
+			hidden.value = visible.checked ? on : off
 		}
-	})
+	}
+
+	visible.addEventListener('change', applyToHidden)
+	setTimeout(applyToHidden, 0)
 }
 
 docReady(() => {

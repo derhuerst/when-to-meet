@@ -100,11 +100,14 @@ body {
 	color: #18AB36;
 }
 
-td.poll-available {
+td.poll-yes {
 	color: #18AB36;
 	background-color: #B2F5A1;
 }
-td.poll-unavailable {
+td.poll-maybe {
+	color: #e1b400;
+}
+td.poll-no {
 	color: #c0392b;
 }
 td.poll-unknown {

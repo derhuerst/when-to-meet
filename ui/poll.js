@@ -98,8 +98,11 @@ const renderThreeStatesCheckbox = (props) => {
 const renderSummary = (poll, choiceId) => {
 	let count = 0
 	for (let vote of poll.votes) {
-		for (let chosen of vote.choices) {
-			if (chosen.choiceId === choiceId && chosen.available) count++
+		for (let c of vote.choices) {
+			if (
+				c.choiceId === choiceId &&
+				(c.value === 'yes' || c.value === 'maybe')
+			) count++
 		}
 	}
 
@@ -142,12 +145,16 @@ const renderPoll = (poll, locale) => {
 
 		for (let choiceId of Object.keys(poll.choices)) {
 			const chosen = vote.choices.find(c => c.choiceId === choiceId)
-			let text = '?'
-			let cls = 'poll-unknown'
-			if (chosen) {
-				text = chosen.available ? '✔︎' : '✘'
-				cls = chosen.available ? 'poll-available' : 'poll-unavailable'
-			}
+			const text = chosen && {
+				yes: '✔︎',
+				maybe: '(✔︎)',
+				no: '✘'
+			}[chosen.value] || '?'
+			const cls = chosen && {
+				yes: 'poll-yes',
+				maybe: 'poll-maybe',
+				no: 'poll-no'
+			}[chosen.value] || 'poll-unknown'
 
 			// todo: alt text or <abbr>
 			cells.push(h('td', {class: cls}, [text]))
