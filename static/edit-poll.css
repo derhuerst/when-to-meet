@@ -1,14 +1,16 @@
 .edit {
 	display: inline-block;
 	margin-top: 1rem;
-	background-color: #f8f8f8;
+	background-color: #fff;
 	box-shadow: 0 0 2rem rgba(0, 0, 0, .1);
 	border-collapse: collapse;
 }
 
 .edit tr:first-of-type td {
-	padding-top: .2em;
-	padding-bottom: .2em;
+	padding: .2em .35em;
+	font-size: 90%;
+	color: #666;
+	background: #f8f8f8;
 }
 
 .edit td {
@@ -25,4 +27,8 @@
 }
 .edit td > input:focus {
 	border-color: #c0392b;
+}
+
+.edit-choice-summary {
+	color: #18AB36;
 }

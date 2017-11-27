@@ -5,6 +5,7 @@ const h = require('h2ml')
 // const ms = require('ms')
 
 const {stylesheet} = require('./lib')
+const renderChoiceSummary = require('./choice-summary')
 const renderPage = require('./page')
 const site = require('../lib/site')
 const pollUrl = require('../lib/poll-url')
@@ -25,7 +26,8 @@ const renderEditPoll = (poll) => {
 		h('tr', {}, [
 			h('td', {}, ['Day']),
 			h('td', {}, ['From']),
-			h('td', {}, ['To'])
+			h('td', {}, ['To']),
+			h('td', {}, ['Votes'])
 		])
 	]
 
@@ -61,6 +63,9 @@ const renderEditPoll = (poll) => {
 					required: 'required',
 					value: choice.timeTo
 				})
+			]),
+			h('td', {class: 'edit-choice-summary'}, [
+				renderChoiceSummary(poll, choiceId)
 			])
 		]))
 	}

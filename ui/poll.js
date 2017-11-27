@@ -6,6 +6,7 @@ const countBy = require('lodash/countBy')
 const ms = require('ms')
 
 const {meta, stylesheet, script} = require('./lib')
+const renderChoiceSummary = require('./choice-summary')
 const renderPage = require('./page')
 const site = require('../lib/site')
 const pollUrl = require('../lib/poll-url')
@@ -14,17 +15,15 @@ const hasProp = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
 
 const renderChoice = (choice, locale) => {
 	// todo: pull timezone from poll
-	const start = DateTime.fromISO(choice.date, {locale})
-		.plus({seconds: choice.timeFrom})
-	const end = DateTime.fromISO(choice.date)
-		.plus({seconds: choice.timeTo})
+	const startISO = choice.date + 'T' + choice.timeFrom + 'Z'
+	const start = DateTime.fromISO(startISO, {locale})
+	const endISO = choice.date + 'T' + choice.timeTo + 'Z'
+	const end = DateTime.fromISO(endISO, {locale})
 
 	const month = start.toFormat('LLL')
 	const day = start.toFormat('c')
 	const dayOfWeek = start.toFormat('ccc')
-	const startISO = start.toISO()
 	const startTime = start.toLocaleString(DateTime.TIME_SIMPLE)
-	const endISO = end.toISO()
 	const endTime = end.toLocaleString(DateTime.TIME_SIMPLE)
 
 	// todo: properly render day overflows
@@ -95,22 +94,6 @@ const renderThreeStatesCheckbox = (props) => {
 	])
 }
 
-const renderSummary = (poll, choiceId) => {
-	let count = 0
-	for (let vote of poll.votes) {
-		for (let c of vote.choices) {
-			if (
-				c.choiceId === choiceId &&
-				(c.value === 'yes' || c.value === 'maybe')
-			) count++
-		}
-	}
-
-	return h('abbr', {
-		title: count + ' people are available'
-	}, ['✔︎ ' + count])
-}
-
 const renderPoll = (poll) => {
 	const choices = [
 		h('td') // empty top left field
@@ -125,7 +108,7 @@ const renderPoll = (poll) => {
 		const choice = poll.choices[choiceId]
 
 		choices.push(h('td', {}, [renderChoice(choice, poll.locale)]))
-		summary.push(h('td', {}, [renderSummary(poll, choiceId)]))
+		summary.push(h('td', {}, [renderChoiceSummary(poll, choiceId)]))
 		submit.push(h('td', {}, [
 			// todo: use a <label>
 			renderThreeStatesCheckbox({
