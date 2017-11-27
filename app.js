@@ -11,6 +11,7 @@ const bodyParsers = require('body-parser')
 
 const showPoll = require('./routes/show-poll')
 const createVote = require('./routes/create-vote')
+const renderError = require('./ui/error')
 
 const db = level(process.env.DB || './when-to-meet.ldb', {valueEncoding: 'json'})
 const app = express()
@@ -27,5 +28,11 @@ app.use((req, res, next) => {
 
 app.get('/p/:title/:id', showPoll)
 app.post('/p/:title/:id', bodyParsers.urlencoded({extended: false}), createVote)
+
+app.use((err, req, res, next) => {
+	res.status(err.notFound ? 404 : err.statusCode || 500)
+	res.type('html')
+	res.end(renderError(err))
+})
 
 module.exports = app

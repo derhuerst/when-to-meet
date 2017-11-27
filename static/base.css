@@ -5,6 +5,7 @@ body {
 	font-weight: 400;
 	line-height: 1.4;
 	color: #222;
+	background-color: #f3f3f3;
 }
 
 /*@media screen and (max-width: 30rem) {
@@ -65,5 +66,12 @@ img {
 	text-align: center;
 }
 #content {
-	margin-bottom: 2rem;
+	width: 30em;
+	margin: 0 auto 2rem auto;
+	text-align: center;
+}
+#content h2 {
+	margin-top: 0;
+	color: #444;
+	font-weight: normal;
 }
