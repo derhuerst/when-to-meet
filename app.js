@@ -10,6 +10,7 @@ const preferredLocales = require('negotiator/lib/language')
 const bodyParsers = require('body-parser')
 
 const start = require('./routes/start')
+const createPoll = require('./routes/create-poll')
 const showPoll = require('./routes/show-poll')
 const createVote = require('./routes/create-vote')
 const renderError = require('./ui/error')
@@ -26,10 +27,12 @@ app.use((req, res, next) => {
 	req.locales = preferredLocales(req.headers['accept-language'])
 	next()
 })
+const bodyParser = bodyParsers.urlencoded({extended: false})
 
 app.get('/', start)
+app.post('/p', bodyParser, createPoll)
 app.get('/p/:title/:id', showPoll)
-app.post('/p/:title/:id', bodyParsers.urlencoded({extended: false}), createVote)
+app.post('/p/:title/:id', bodyParser, createVote)
 
 app.use((err, req, res, next) => {
 	res.status(err.notFound ? 404 : err.statusCode || 500)

@@ -26,6 +26,7 @@
 		"compression": "^1.7.1",
 		"crypto-random-string": "^1.0.0",
 		"document-ready": "^2.0.1",
+		"escape-html": "^1.0.3",
 		"express": "^4.16.2",
 		"h2ml": "^0.3.0",
 		"hsts": "^2.1.0",
