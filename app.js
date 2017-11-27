@@ -12,6 +12,7 @@ const bodyParsers = require('body-parser')
 const start = require('./routes/start')
 const createPoll = require('./routes/create-poll')
 const showPoll = require('./routes/show-poll')
+const editPoll = require('./routes/edit-poll')
 const createVote = require('./routes/create-vote')
 const renderError = require('./ui/error')
 
@@ -32,6 +33,7 @@ const bodyParser = bodyParsers.urlencoded({extended: false})
 app.get('/', start)
 app.post('/p', bodyParser, createPoll)
 app.get('/p/:title/:id', showPoll)
+app.get('/p/:title/:id/edit', editPoll)
 app.post('/p/:title/:id', bodyParser, createVote)
 
 app.use((err, req, res, next) => {
