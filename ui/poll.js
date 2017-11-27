@@ -4,11 +4,11 @@ const h = require('h2ml')
 const {DateTime} = require('luxon')
 const countBy = require('lodash/countBy')
 const ms = require('ms')
-const slugg = require('slugg')
 
 const {meta, stylesheet, script} = require('./lib')
 const renderPage = require('./page')
 const site = require('../lib/site')
+const pollUrl = require('../lib/poll-url')
 
 const hasProp = (o, k) => Object.prototype.hasOwnProperty.call(o, k)
 
@@ -111,7 +111,7 @@ const renderSummary = (poll, choiceId) => {
 	}, ['✔︎ ' + count])
 }
 
-const renderPoll = (poll, locale) => {
+const renderPoll = (poll) => {
 	const choices = [
 		h('td') // empty top left field
 	]
@@ -124,7 +124,7 @@ const renderPoll = (poll, locale) => {
 	for (let choiceId of Object.keys(poll.choices)) {
 		const choice = poll.choices[choiceId]
 
-		choices.push(h('td', {}, [renderChoice(choice, locale)]))
+		choices.push(h('td', {}, [renderChoice(choice, poll.locale)]))
 		summary.push(h('td', {}, [renderSummary(poll, choiceId)]))
 		submit.push(h('td', {}, [
 			// todo: use a <label>
@@ -163,13 +163,32 @@ const renderPoll = (poll, locale) => {
 		votes.push(h('tr', {}, cells))
 	}
 
-	// todo: add a poll.slug prop
-	const url = '/p/' + encodeURIComponent(slugg(poll.title)) + '/' + poll.id
+	let pollSubmitRow = ''
+	let pollSubmitForm = ''
+	if (poll.canVote) {
+		pollSubmitRow = h('tr', {class: 'poll-submit'}, submit)
+		pollSubmitForm = h('form', {
+			id: 'poll-submit',
+			action: pollUrl(poll),
+			method: 'post'
+		}, [
+			h('input', {
+				type: 'hidden',
+				name: 'vote-key',
+				value: poll.voteKey
+			}),
+			h('input', {
+				type: 'submit',
+				value: 'submit'
+			})
+		])
+	}
+
 	const content = [
 		h('h2', {id: 'poll-title'}, poll.title),
 		h('p', {id: 'poll-meta'}, [
 			'created ',
-			renderCreated(poll.created * 1000, locale),
+			renderCreated(poll.created * 1000, poll.locale),
 			' by ',
 			poll.author
 		]),
@@ -179,18 +198,9 @@ const renderPoll = (poll, locale) => {
 		}, [
 			h('tr', {class: 'poll-choices'}, choices),
 			h('tr', {class: 'poll-summary'}, summary),
-			h('tr', {class: 'poll-submit'}, submit)
+			pollSubmitRow
 		].concat(votes)),
-		h('form', {
-			id: 'poll-submit',
-			action: url,
-			method: 'post'
-		}, [
-			h('input', {
-				type: 'submit',
-				value: 'submit'
-			})
-		])
+		pollSubmitForm
 	].join('\n')
 
 	const page = Object.assign({}, poll, {

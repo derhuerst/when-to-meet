@@ -10,13 +10,15 @@ const showPoll = (req, res, next) => {
 	if (!req.app || !req.app.locals || !req.app.locals.db) return next()
 	if (accepts(req).type('html') !== 'html') return next()
 
-	const locale = req.locales[0] || null
-
 	getPoll(req.app.locals.db, req.params.id, (err, poll) => {
 		if (err) return next(err)
 
+		poll.canVote = req.query['vote-key'] === poll.voteKey
+		poll.locale = req.locales[0] || null
+		poll.slug = req.params.title || null
+
 		try {
-			const html = renderPoll(poll, locale)
+			const html = renderPoll(poll)
 			res.status(200)
 			res.type('html')
 			res.end(html)

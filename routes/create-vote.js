@@ -1,16 +1,29 @@
 'use strict'
 
 const randomId = require('crypto-random-string')
-const slugg = require('slugg')
 const difference = require('lodash/difference')
 
 const getPoll = require('../lib/get-poll')
 const putVote = require('../lib/put-vote')
+const pollUrl = require('../lib/poll-url')
 
 const createVote = (req, res, next) => {
 	if (!req.params || !req.params.id) return next()
+
+	if (!req.body['vote-key']) {
+		const err = new Error('missing vote key')
+		err.statusCode = 401
+		return next(err)
+	}
+
 	getPoll(res.app.locals.db, req.params.id, (err, poll) => {
 		if (err) return next(err)
+
+		if (poll.voteKey !== req.body['vote-key']) {
+			const err = new Error('invalid vote key')
+			err.statusCode = 401
+			return next(err)
+		}
 
 		const val = {
 			id: randomId(8),
@@ -19,6 +32,7 @@ const createVote = (req, res, next) => {
 		}
 		for (let k of Object.keys(req.body)) {
 			if (k === 'author') val.author = req.body.author
+			else if (k === 'vote-key') continue
 			else {
 				const choiceId = k.slice('choice-'.length)
 				if (!poll.choices[choiceId]) {
@@ -43,9 +57,10 @@ const createVote = (req, res, next) => {
 		putVote(res.app.locals.db, val, (err) => {
 			if (err) return next(err)
 
-			// todo: add a poll.slug prop
-			const url = '/p/' + encodeURIComponent(slugg(poll.title)) + '/' + poll.id
-			res.redirect(302, url)
+			poll.canVote = req.body['vote-key'] === poll.voteKey
+			poll.locale = req.locales[0] || null
+			poll.slug = req.params.title || null
+			res.redirect(302, pollUrl(poll))
 		})
 	})
 }

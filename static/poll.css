@@ -78,9 +78,6 @@ body {
 .poll-submit {
 	background-color: #d8d8d8;
 }
-.poll-submit td {
-	padding-bottom: .3em;
-}
 
 .poll-submit-author {
 	padding: .2em .3em;
